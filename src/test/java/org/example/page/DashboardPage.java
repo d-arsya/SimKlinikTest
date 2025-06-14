@@ -8,4 +8,8 @@ public class DashboardPage {
     public DashboardPage(WebDriver driver) {
         this.driver = driver;
     }
+
+    public boolean isDisplayed(){
+        return driver.getCurrentUrl().endsWith("dashboard");
+    }
 }
