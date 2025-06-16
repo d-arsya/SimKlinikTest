@@ -57,4 +57,14 @@ public class ProfileTest {
         Assertions.assertEquals(name,newName);
         Assertions.assertEquals(specialization,newSpecialization);
     }
+
+    @Test
+    void updateProfileNegative(){
+        dashboardPage.goToProfile();
+        Assertions.assertTrue(profilePage.isDisplayed());
+        profilePage.goToEdit();
+        profilePage.clearName();
+        profilePage.submitEditForm();
+        Assertions.assertTrue(profilePage.isAlertDisplayed());
+    }
 }

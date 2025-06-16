@@ -1,6 +1,7 @@
 package org.example.page;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 
 public class ProfilePage {
@@ -22,6 +23,9 @@ public class ProfilePage {
         driver.findElement(By.xpath("//*[@id=\"submitForm\"]//input[@name=\"name\"]")).clear();
         driver.findElement(By.xpath("//*[@id=\"submitForm\"]//input[@name=\"name\"]")).sendKeys(name);
     }
+    public void clearName(){
+        driver.findElement(By.xpath("//*[@id=\"submitForm\"]//input[@name=\"name\"]")).clear();
+    }
 
     public void setSpecialization(String specialization){
         driver.findElement(By.xpath("//*[@id=\"submitForm\"]//input[@name=\"specialization\"]")).clear();
@@ -29,7 +33,7 @@ public class ProfilePage {
     }
 
     public void submitEditForm(){
-        driver.findElement(By.xpath("//*[@id=\"submitForm\"]")).submit();
+        driver.findElement(By.xpath("//*[@id=\"submitForm\"]//button")).click();
     }
 
     public String getName(){
@@ -38,5 +42,12 @@ public class ProfilePage {
 
     public String getSpecialization(){
         return driver.findElement(By.xpath("/html/body/div[1]/div[2]/main/div[2]/div[2]/div/p[4]")).getText();
+    }
+
+    public boolean isAlertDisplayed(){
+        String validationMessage = (String) ((JavascriptExecutor)driver)
+                .executeScript("return arguments[0].validationMessage;", driver.findElement(By.xpath("//*[@id=\"submitForm\"]//input[@name=\"name\"]")));
+
+        return validationMessage != null && !validationMessage.isEmpty();
     }
 }
