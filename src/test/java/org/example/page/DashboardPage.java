@@ -1,11 +1,12 @@
 package org.example.page;
 
+import io.github.cdimascio.dotenv.Dotenv;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
 public class DashboardPage {
     WebDriver driver;
-
+    Dotenv dotenv = Dotenv.load();
     public DashboardPage(WebDriver driver) {
         this.driver = driver;
     }
@@ -24,19 +25,22 @@ public class DashboardPage {
     }
 
     public void goToProfile(){
-        driver.get("https://simklinik.madanateknologi.web.id/profile");
+        driver.get(dotenv.get("SIMKLINIK_URL")+"/profile");
 
     }
 
     public void goToQueue(){
-        driver.get("https://simklinik.madanateknologi.web.id/queue");
+        driver.get(dotenv.get("SIMKLINIK_URL")+"/queue");
+    }
+    public void goToInvoice(){
+        driver.get(dotenv.get("SIMKLINIK_URL")+"/invoice");
     }
 
     public void goToPatient(){
-        driver.get("https://simklinik.madanateknologi.web.id/patient");
+        driver.get(dotenv.get("SIMKLINIK_URL")+"/patient");
     }
 
     public void goToInpatient(){
-        driver.get("https://simklinik.madanateknologi.web.id/inpatient");
+        driver.get(dotenv.get("SIMKLINIK_URL")+"/inpatient");
     }
 }

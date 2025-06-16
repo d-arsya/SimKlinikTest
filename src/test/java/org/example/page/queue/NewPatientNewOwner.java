@@ -1,5 +1,6 @@
 package org.example.page.queue;
 
+import io.github.cdimascio.dotenv.Dotenv;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -13,6 +14,7 @@ import java.time.Duration;
 public class NewPatientNewOwner {
     WebDriver driver;
     WebDriverWait wait;
+    Dotenv dotenv = Dotenv.load();
 
     public NewPatientNewOwner(WebDriver driver){
         this.driver = driver;

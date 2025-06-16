@@ -1,10 +1,12 @@
 package org.example.page.patient;
 
+import io.github.cdimascio.dotenv.Dotenv;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
 public class PatientDetailPage {
     WebDriver driver;
+    Dotenv dotenv = Dotenv.load();
 
     public PatientDetailPage(WebDriver driver){
         this.driver = driver;

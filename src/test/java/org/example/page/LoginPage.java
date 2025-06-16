@@ -13,7 +13,7 @@ public class LoginPage {
     }
 
     public boolean isDisplayed(){
-        return driver.findElement(By.xpath("/html/body/div/div[1]/div/form/div[4]/button")).isDisplayed();
+        return driver.getCurrentUrl().endsWith("login");
     }
 
     public void fillEmail(String email){

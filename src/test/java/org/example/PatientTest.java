@@ -1,5 +1,6 @@
 package org.example;
 
+import io.github.cdimascio.dotenv.Dotenv;
 import org.example.page.*;
 import org.example.page.diagnose.DiagnosePatientPage;
 import org.example.page.patient.PatientDetailPage;
@@ -17,12 +18,13 @@ public class PatientTest {
     QueuePage queuePage;
     PatientPage patientPage;
     InpatientPage inpatientPage;
+    Dotenv dotenv = Dotenv.load();
 
     @BeforeEach
     void setUp() {
         driver = new EdgeDriver();
         driver.manage().window().maximize();
-        driver.get("https://simklinik.madanateknologi.web.id");
+        driver.get(dotenv.get("SIMKLINIK_URL"));
 
         dashboardPage = new DashboardPage(driver);
         loginPage = new LoginPage(driver);

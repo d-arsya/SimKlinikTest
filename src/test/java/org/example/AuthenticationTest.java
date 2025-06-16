@@ -1,5 +1,6 @@
 package org.example;
 
+import io.github.cdimascio.dotenv.Dotenv;
 import org.example.page.DashboardPage;
 import org.example.page.ForgotPage;
 import org.example.page.LoginPage;
@@ -15,12 +16,13 @@ public class AuthenticationTest {
     DashboardPage dashboardPage;
     LoginPage loginPage;
     ForgotPage forgotPage;
+    Dotenv dotenv = Dotenv.load();
 
     @BeforeEach
     void setUp() {
         driver = new EdgeDriver();
         driver.manage().window().maximize();
-        driver.get("https://simklinik.madanateknologi.web.id");
+        driver.get(dotenv.get("SIMKLINIK_URL"));
 
         dashboardPage = new DashboardPage(driver);
         loginPage = new LoginPage(driver);
@@ -62,8 +64,8 @@ public class AuthenticationTest {
     @Test
     void unauthenticatedUser(){
         Assertions.assertTrue(loginPage.isDisplayed());
-        driver.get("https://simklinik.madanateknologi.web.id/dashboard");
-        Assertions.assertTrue(driver.getCurrentUrl().equals("https://simklinik.madanateknologi.web.id/login"));
+        driver.get(dotenv.get("SIMKLINIK_URL")+"/dashboard");
+        Assertions.assertTrue(driver.getCurrentUrl().equals(dotenv.get("SIMKLINIK_URL")+"/login"));
     }
 
     @Test
