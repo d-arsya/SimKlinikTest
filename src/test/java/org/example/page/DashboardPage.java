@@ -24,10 +24,19 @@ public class DashboardPage {
     }
 
     public void goToProfile(){
-        driver.findElement(By.xpath("/html/body/div/div[2]/main/div/div[1]/a")).click();
+        driver.get("https://simklinik.madanateknologi.web.id/profile");
+
     }
 
     public void goToQueue(){
-        driver.findElement(By.xpath("//*[@id=\"logo-sidebar\"]/div/ul/li[2]/a")).click();
+        driver.get("https://simklinik.madanateknologi.web.id/queue");
+    }
+
+    public void goToPatient(){
+        driver.get("https://simklinik.madanateknologi.web.id/patient");
+    }
+
+    public void goToInpatient(){
+        driver.get("https://simklinik.madanateknologi.web.id/inpatient");
     }
 }
