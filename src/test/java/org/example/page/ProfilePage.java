@@ -8,4 +8,8 @@ public class ProfilePage {
     public ProfilePage(WebDriver driver) {
         this.driver = driver;
     }
+
+    public boolean isDisplayed(){
+        return driver.getCurrentUrl().endsWith("profile");
+    }
 }
