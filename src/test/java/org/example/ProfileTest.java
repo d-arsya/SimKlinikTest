@@ -1,27 +1,27 @@
 package org.example;
 
+import com.aventstack.extentreports.Status;
 import io.github.cdimascio.dotenv.Dotenv;
 import org.example.page.DashboardPage;
 import org.example.page.LoginPage;
 import org.example.page.ProfilePage;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.edge.EdgeDriver;
+import org.testng.Assert;
+import org.testng.annotations.*;
 
-public class ProfileTest {
-    WebDriver driver;
-    DashboardPage dashboardPage;
-    LoginPage loginPage;
-    ProfilePage profilePage;
+import java.lang.reflect.Method;
+
+public class ProfileTest extends BaseTest {
+
+    private DashboardPage dashboardPage;
+    private LoginPage loginPage;
+    private ProfilePage profilePage;
     Dotenv dotenv = Dotenv.load();
 
-    @BeforeEach
-    void setUp() {
-        driver = new EdgeDriver();
-        driver.manage().window().maximize();
+    @BeforeMethod
+    public void setUp(Method method) {
+        test = extent.createTest(method.getName());
+
+        driver = setupDriver();
         driver.get(dotenv.get("SIMKLINIK_URL"));
 
         dashboardPage = new DashboardPage(driver);
@@ -31,42 +31,39 @@ public class ProfileTest {
         login();
     }
 
-    @AfterEach
-    void tearDown() {
-        if (driver != null) {
-            driver.quit();
-        }
-    }
-
-    void login(){
+    public void login() {
         loginPage.fillEmail("kamaluddin.arsyad05@gmail.com");
         loginPage.fillPassword("admin");
         loginPage.submitLogin();
     }
 
     @Test
-    void updateProfile(){
+    public void updateProfile() {
         dashboardPage.goToProfile();
-        Assertions.assertTrue(profilePage.isDisplayed());
+        Assert.assertTrue(profilePage.isDisplayed());
+
         profilePage.goToEdit();
         String name = "Nama Baru Arsyad";
         String specialization = "Kucing Gila";
         profilePage.setName(name);
         profilePage.setSpecialization(specialization);
         profilePage.submitEditForm();
-        String newName = profilePage.getName();
-        String newSpecialization = profilePage.getSpecialization();
-        Assertions.assertEquals(name,newName);
-        Assertions.assertEquals(specialization,newSpecialization);
+
+        Assert.assertEquals(profilePage.getName(), name);
+        Assert.assertEquals(profilePage.getSpecialization(), specialization);
+        test.log(Status.PASS, "User berhasil mengubah profil.");
     }
 
     @Test
-    void updateProfileNegative(){
+    public void updateProfileNegative() {
         dashboardPage.goToProfile();
-        Assertions.assertTrue(profilePage.isDisplayed());
+        Assert.assertTrue(profilePage.isDisplayed());
+
         profilePage.goToEdit();
         profilePage.clearName();
         profilePage.submitEditForm();
-        Assertions.assertTrue(profilePage.isAlertDisplayed());
+
+        Assert.assertTrue(profilePage.isAlertDisplayed());
+        test.log(Status.PASS, "User gagal mengubah profil karena field kosong.");
     }
 }

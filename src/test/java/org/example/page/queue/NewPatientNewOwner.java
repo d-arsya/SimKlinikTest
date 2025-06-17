@@ -56,7 +56,17 @@ public class NewPatientNewOwner {
         driver.findElement(By.xpath("//*[@id=\"ownerForm\"]//input[@name=\"address\"]")).sendKeys(address);
     }
     public String submitOwner(){
-        driver.findElement(By.xpath("//*[@id=\"ownerForm\"]/div[7]/button")).click();
+        WebElement button = driver.findElement(By.xpath("//*[@id=\"ownerForm\"]/div[7]/button"));
+
+        // Scroll ke tombol submit
+        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", button);
+        try { Thread.sleep(300); } catch (InterruptedException e) { e.printStackTrace(); }
+
+
+        // Klik pakai JS (bypass intercept)
+        ((JavascriptExecutor) driver).executeScript("arguments[0].click();", button);
+
+        // Tunggu dan ambil alert
         Alert alert = wait.until(ExpectedConditions.alertIsPresent());
         String text = alert.getText();
         alert.accept();

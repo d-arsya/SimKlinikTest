@@ -1,3 +1,4 @@
+
 package org.example.page.queue;
 
 import io.github.cdimascio.dotenv.Dotenv;
@@ -19,12 +20,20 @@ public class OldPatient {
 
     public void submitPatient(){
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"table-old-patient\"]/tbody/tr[1]")));
-        driver.findElement(By.xpath("//*[@id=\"table-old-patient\"]/tbody/tr[1]/td[7]/button")).click();
-        wait.until(ExpectedConditions.visibilityOf(driver.findElement(By.id("confirm-old-patient"))));
-        driver.findElement(By.xpath("//*[@id=\"confirm-old-patient\"]/button[2]")).click();
-        wait.until(ExpectedConditions.visibilityOf(driver.findElement(By.id("old-patient-checkup"))));
 
+        WebElement button = driver.findElement(By.xpath("//*[@id=\"table-old-patient\"]/tbody/tr[1]/td[7]/button"));
+
+        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", button);
+        try { Thread.sleep(300); } catch (InterruptedException e) { e.printStackTrace(); }
+
+        ((JavascriptExecutor) driver).executeScript("arguments[0].click();", button);
+
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("confirm-old-patient")));
+        driver.findElement(By.xpath("//*[@id=\"confirm-old-patient\"]/button[2]")).click();
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("old-patient-checkup")));
     }
+
+
 
     public void setWeight(int weight){
         driver.findElement(By.xpath("//*[@id=\"old-patient-checkup\"]//input[@id=\"weight\"]")).sendKeys(Integer.toString(weight));

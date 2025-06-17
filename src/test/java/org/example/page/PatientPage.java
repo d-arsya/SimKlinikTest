@@ -3,6 +3,7 @@ package org.example.page;
 import org.example.page.diagnose.DiagnosePatientPage;
 import org.example.page.patient.PatientDetailPage;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 
 public class PatientPage {
@@ -35,4 +36,5 @@ public class PatientPage {
     public PatientDetailPage getPatientDetailPage(){
         return new PatientDetailPage(driver);
     }
+
 }

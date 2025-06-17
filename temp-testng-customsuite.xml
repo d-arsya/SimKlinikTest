@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="Full Suite">
+  <test thread-count="5" name="SimKlinikTest2">
+    <classes>
+      <class name="org.example.AuthenticationTest"/>
+      <class name="org.example.DashboardTest"/>
+      <class name="org.example.QueueTest"/>
+      <class name="org.example.PatientTest"/>
+      <class name="org.example.InvoiceTest"/>
+      <class name="org.example.ProfileTest"/>
+    </classes>
+  </test> <!-- SimKlinikTest2 -->
+</suite> <!-- Default Suite -->

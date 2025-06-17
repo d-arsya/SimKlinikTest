@@ -1,80 +1,76 @@
 package org.example;
 
+import com.aventstack.extentreports.Status;
 import io.github.cdimascio.dotenv.Dotenv;
 import org.example.page.DashboardPage;
 import org.example.page.ForgotPage;
 import org.example.page.LoginPage;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.edge.EdgeDriver;
+import org.testng.Assert;
+import org.testng.annotations.*;
 
-public class AuthenticationTest {
-    WebDriver driver;
-    DashboardPage dashboardPage;
-    LoginPage loginPage;
-    ForgotPage forgotPage;
+import java.lang.reflect.Method;
+
+public class AuthenticationTest extends BaseTest {
+
+    private LoginPage loginPage;
+    private DashboardPage dashboardPage;
+    private ForgotPage forgotPage;
     Dotenv dotenv = Dotenv.load();
 
-    @BeforeEach
-    void setUp() {
-        driver = new EdgeDriver();
-        driver.manage().window().maximize();
-        driver.get(dotenv.get("SIMKLINIK_URL"));
+    @BeforeMethod
+    public void setUp(Method method) {
+        test = extent.createTest(method.getName());
+        driver = setupDriver();
 
-        dashboardPage = new DashboardPage(driver);
+        driver.get(dotenv.get("SIMKLINIK_URL"));
         loginPage = new LoginPage(driver);
+        dashboardPage = new DashboardPage(driver);
         forgotPage = new ForgotPage(driver);
     }
 
-    @AfterEach
-    void tearDown() {
-        if (driver != null) {
-            driver.quit();
-        }
-    }
-
     @Test
-    void positiveLoginTest(){
-        Assertions.assertTrue(loginPage.isDisplayed());
+    public void positiveLoginTest() {
+        Assert.assertTrue(loginPage.isDisplayed());
         loginPage.fillEmail("kamaluddin.arsyad05@gmail.com");
         loginPage.fillPassword("admin");
         loginPage.submitLogin();
-        Assertions.assertTrue(dashboardPage.isDisplayed());
+        Assert.assertTrue(dashboardPage.isDisplayed());
+        test.log(Status.PASS, "Login berhasil, dashboard ditampilkan.");
     }
 
     @Test
-    void negativeLoginTest(){
-        Assertions.assertTrue(loginPage.isDisplayed());
+    public void negativeLoginTest() {
+        Assert.assertTrue(loginPage.isDisplayed());
         loginPage.fillEmail("kamaluddin.arsyad05@gmail.com");
         loginPage.fillPassword("adminwroong");
         loginPage.submitLogin();
-        Assertions.assertTrue(loginPage.isFailed());
+        Assert.assertTrue(loginPage.isFailed());
+        test.log(Status.PASS, "Login gagal sesuai ekspektasi.");
     }
 
     @Test
-    void emptyFieldTest(){
-        Assertions.assertTrue(loginPage.isDisplayed());
+    public void emptyFieldTest() {
+        Assert.assertTrue(loginPage.isDisplayed());
         loginPage.submitLogin();
-        Assertions.assertTrue(loginPage.isAlertDisplayed());
+        Assert.assertTrue(loginPage.isAlertDisplayed());
+        test.log(Status.PASS, "Login gagal karena field kosong memunculkan alert.");
     }
 
     @Test
-    void unauthenticatedUser(){
-        Assertions.assertTrue(loginPage.isDisplayed());
-        driver.get(dotenv.get("SIMKLINIK_URL")+"/dashboard");
-        Assertions.assertTrue(driver.getCurrentUrl().equals(dotenv.get("SIMKLINIK_URL")+"/login"));
+    public void unauthenticatedUser() {
+        Assert.assertTrue(loginPage.isDisplayed());
+        driver.get(dotenv.get("SIMKLINIK_URL") + "/dashboard");
+        Assert.assertEquals(driver.getCurrentUrl(), dotenv.get("SIMKLINIK_URL") + "/login");
+        test.log(Status.PASS, "User tidak bisa mengakses dashboard tanpa login.");
     }
 
     @Test
-    void forgotPassword(){
-        Assertions.assertTrue(loginPage.isDisplayed());
+    public void forgotPassword() {
+        Assert.assertTrue(loginPage.isDisplayed());
         loginPage.goToForgotPage();
-        forgotPage.isDisplayed();
         forgotPage.fillEmail("kamaluddin.arsyad05@gmail.com");
         forgotPage.submitForm();
-        Assertions.assertTrue(forgotPage.isSuccess());
+        Assert.assertTrue(forgotPage.isSuccess());
+        test.log(Status.PASS, "Permintaan reset password berhasil dikirim.");
     }
 }

@@ -19,8 +19,8 @@ public class InvoicePage {
         for (int i = 1; i < 10; i++) {
             String ai = driver.findElement(By.xpath("//*[@id=\"dataTable\"]/tbody/tr["+i+"]/td[9]/a")).getAttribute("href");
             if (!ai.endsWith("edit")){
-               link = i;
-               break;
+                link = i;
+                break;
             }
         }
         return link;
@@ -31,8 +31,8 @@ public class InvoicePage {
         for (int i = 1; i < 10; i++) {
             String ai = driver.findElement(By.xpath("//*[@id=\"dataTable\"]/tbody/tr["+i+"]/td[9]/a")).getAttribute("href");
             if (ai.endsWith("edit")){
-               link = i;
-               break;
+                link = i;
+                break;
             }
         }
         return link;
