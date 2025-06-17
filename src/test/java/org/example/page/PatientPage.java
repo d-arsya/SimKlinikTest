@@ -13,7 +13,7 @@ public class PatientPage {
     }
 
     public boolean isDisplayed(){
-        return driver.getCurrentUrl().endsWith("patient");
+        return driver.getCurrentUrl().endsWith("/patient");
     }
 
     public String getFirstPatientRecordCode(){
