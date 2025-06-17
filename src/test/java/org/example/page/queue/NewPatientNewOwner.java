@@ -1,10 +1,7 @@
 package org.example.page.queue;
 
 import io.github.cdimascio.dotenv.Dotenv;
-import org.openqa.selenium.Alert;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -61,8 +58,9 @@ public class NewPatientNewOwner {
     public String submitOwner(){
         driver.findElement(By.xpath("//*[@id=\"ownerForm\"]/div[7]/button")).click();
         Alert alert = wait.until(ExpectedConditions.alertIsPresent());
-        driver.switchTo().alert().accept();
-        return alert.getText();
+        String text = alert.getText();
+        alert.accept();
+        return text;
     }
 
     public void setPatientName(String name){
@@ -84,22 +82,50 @@ public class NewPatientNewOwner {
         genderSelect.selectByVisibleText(animal);
     }
     public void setVariant(String variant){
-        WebElement cityOption = driver.findElement(By.xpath("//*[@id=\"patientForm\"]//select[@name=\"variant_id\"]"));
-        wait.until(ExpectedConditions.textToBePresentInElementLocated(By.xpath("//*[@id=\"patientForm\"]//select[@name=\"variant_id\"]"), variant));
+        WebElement cityOption = driver.findElement(By.xpath("//*[@id=\"patientForm\"]//select[@name=\"type_id\"]"));
+        wait.until(ExpectedConditions.textToBePresentInElementLocated(By.xpath("//*[@id=\"patientForm\"]//select[@name=\"type_id\"]"), variant));
         Select citySelect = new Select(cityOption);
         citySelect.selectByVisibleText(variant);
     }
     public void setBirth(String birth){
-        driver.findElement(By.xpath("//*[@id=\"patientForm\"]//select[@name=\"birth\"]")).sendKeys(birth);
+        WebElement dateInput = driver.findElement(By.xpath("//*[@id=\"patientForm\"]//input[@name=\"birth\"]"));
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        js.executeScript("arguments[0].value = arguments[1];", dateInput, birth);
     }
     public String submitPatient(){
         driver.findElement(By.xpath("//*[@id=\"patientForm\"]/div[7]/button")).click();
         Alert alert = wait.until(ExpectedConditions.alertIsPresent());
-        driver.switchTo().alert().accept();
-        return alert.getText();
+        String text = alert.getText();
+        alert.accept();
+        wait.until(ExpectedConditions.visibilityOf(driver.findElement(By.id("form-new-owner-new-patient"))));
+        return text;
     }
 
     public void confirmPatient(){
-        driver.findElement(By.xpath("//*[@id=\"modal-add-queue\"]/div/div/div[3]/div[3]/div/button[2]")).click();
+        wait.until(ExpectedConditions.visibilityOf(driver.findElement(By.id("confirm-add-button-new-patient"))));
+        driver.findElement(By.id("confirm-add-button-new-patient")).click();
+    }
+
+    public void setWeight(int weight){
+        driver.findElement(By.xpath("//*[@id=\"form-new-owner-new-patient\"]//input[@id=\"weight\"]")).sendKeys(Integer.toString(weight));
+    }
+    public void setPulse(int pulse){
+        driver.findElement(By.xpath("//*[@id=\"form-new-owner-new-patient\"]//input[@id=\"pulse\"]")).sendKeys(Integer.toString(pulse));
+    }
+    public void setTemp(int temp){
+        driver.findElement(By.xpath("//*[@id=\"form-new-owner-new-patient\"]//input[@id=\"temperature\"]")).sendKeys(Integer.toString(temp));
+    }
+    public void setBreath(int breath){
+        driver.findElement(By.xpath("//*[@id=\"form-new-owner-new-patient\"]//input[@id=\"breath\"]")).sendKeys(Integer.toString(breath));
+    }
+    public void setService(String service){
+        WebElement genderOption = driver.findElement(By.xpath("//*[@id=\"form-new-owner-new-patient\"]//select[@name=\"service_id\"]"));
+        Select genderSelect = new Select(genderOption);
+        genderSelect.selectByVisibleText(service);
+    }
+
+    public void submitCheckup(){
+        driver.findElement(By.xpath("//*[@id=\"form-new-owner-new-patient\"]/div[7]/button")).click();
+        wait.until(ExpectedConditions.invisibilityOf(driver.findElement(By.id("form-new-owner-new-patient"))));
     }
 }

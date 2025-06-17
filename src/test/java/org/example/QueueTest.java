@@ -49,6 +49,7 @@ public class QueueTest {
     @Test
     void newPatientNewOwner(){
         Assertions.assertTrue(queuePage.isDisplayed());
+        int queBefore = queuePage.getQueAmount();
         queuePage.newPatientNewOwner();
         queuePage.newPatientNewOwner.setName("Kamal");
         queuePage.newPatientNewOwner.setGender("Laki-laki");
@@ -63,12 +64,63 @@ public class QueueTest {
 
         queuePage.newPatientNewOwner.setPatientName("Pig Pinky");
         queuePage.newPatientNewOwner.setPatientGender("Jantan");
-        queuePage.newPatientNewOwner.setBirth("2024-10-12");
+        queuePage.newPatientNewOwner.setBirth("2024-11-20");
         queuePage.newPatientNewOwner.setAnimal("Kucing");
         queuePage.newPatientNewOwner.setVariant("Persia");
         queuePage.newPatientNewOwner.setColor("Hitam");
         String patient = queuePage.newPatientNewOwner.submitPatient();
         Assertions.assertEquals("Data berhasil disimpan!",patient);
-        queuePage.newPatientNewOwner.confirmPatient();
+//        queuePage.newPatientNewOwner.confirmPatient();
+        queuePage.newPatientNewOwner.setWeight(100);
+        queuePage.newPatientNewOwner.setPulse(100);
+        queuePage.newPatientNewOwner.setTemp(100);
+        queuePage.newPatientNewOwner.setBreath(100);
+        queuePage.newPatientNewOwner.setService("Pemeriksaan Umum");
+        queuePage.newPatientNewOwner.submitCheckup();
+        Assertions.assertTrue(queuePage.isDisplayed());
+        Assertions.assertEquals(queBefore+1,queuePage.getQueAmount());
+    }
+
+    @Test
+    void newPatientOldOwner(){
+        Assertions.assertTrue(queuePage.isDisplayed());
+        int queBefore = queuePage.getQueAmount();
+        queuePage.newPatientOldOwner();
+        queuePage.newPatientOldOwner.submitOwner();
+
+        queuePage.newPatientOldOwner.setPatientName("Pig Pinky");
+        queuePage.newPatientOldOwner.setPatientGender("Jantan");
+        queuePage.newPatientOldOwner.setBirth("2024-11-20");
+        queuePage.newPatientOldOwner.setAnimal("Kucing");
+        queuePage.newPatientOldOwner.setVariant("Persia");
+        queuePage.newPatientOldOwner.setColor("Hitam");
+        String patient = queuePage.newPatientOldOwner.submitPatient();
+        Assertions.assertEquals("Data berhasil disimpan!",patient);
+        queuePage.newPatientOldOwner.setWeight(100);
+        queuePage.newPatientOldOwner.setPulse(100);
+        queuePage.newPatientOldOwner.setTemp(100);
+        queuePage.newPatientOldOwner.setBreath(100);
+        queuePage.newPatientOldOwner.setService("Pemeriksaan Umum");
+        queuePage.newPatientOldOwner.submitCheckup();
+        Assertions.assertTrue(queuePage.isDisplayed());
+        Assertions.assertEquals(queBefore+1,queuePage.getQueAmount());
+    }
+
+    @Test
+    void oldPatient(){
+        Assertions.assertTrue(queuePage.isDisplayed());
+        int queBefore = queuePage.getQueAmount();
+        queuePage.oldPatientPopup();
+
+        queuePage.oldPatient.submitPatient();
+
+        queuePage.oldPatient.setWeight(100);
+        queuePage.oldPatient.setPulse(100);
+        queuePage.oldPatient.setTemp(100);
+        queuePage.oldPatient.setBreath(100);
+        queuePage.oldPatient.setService("Pemeriksaan Umum");
+        queuePage.oldPatient.submitCheckup();
+        Assertions.assertTrue(queuePage.isDisplayed());
+        Assertions.assertEquals(queBefore+1,queuePage.getQueAmount());
     }
 }

@@ -5,15 +5,21 @@ import org.example.page.queue.NewPatientOldOwner;
 import org.example.page.queue.OldPatient;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.time.Duration;
 
 public class QueuePage {
     WebDriver driver;
+    WebDriverWait wait;
     public NewPatientNewOwner newPatientNewOwner;
     public OldPatient oldPatient;
     public NewPatientOldOwner newPatientOldOwner;
 
     public QueuePage(WebDriver driver) {
         this.driver = driver;
+        wait = new WebDriverWait(driver, Duration.ofSeconds(10));
         this.newPatientNewOwner = new NewPatientNewOwner(driver);
         this.newPatientOldOwner = new NewPatientOldOwner(driver);
         this.oldPatient = new OldPatient(driver);
@@ -26,8 +32,9 @@ public class QueuePage {
     public void newPatienPopup(){
         driver.findElement(By.xpath("//*[@id=\"modal-add-queue\"]/button")).click();
     }
-    public void oldPatienPopup(){
-        driver.findElement(By.xpath("/html/body/div/div[2]/main/div[1]/div[2]/div/div[1]/button")).click();
+    public void oldPatientPopup(){
+        driver.findElement(By.xpath("//*[@id=\"modal-old-patient\"]/button")).click();
+        wait.until(ExpectedConditions.visibilityOf(driver.findElement(By.id("table-old-patient"))));
     }
     public void newOwner(){
         driver.findElement(By.xpath("//*[@id=\"modal-add-queue\"]/div/div/div[2]/button[2]")).click();
@@ -40,6 +47,7 @@ public class QueuePage {
         newPatienPopup();
         newOwner();
     }
+
     public void newPatientOldOwner(){
         newPatienPopup();
         oldOwner();
