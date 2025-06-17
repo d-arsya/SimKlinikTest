@@ -1,28 +1,29 @@
 package org.example;
 
+import com.aventstack.extentreports.Status;
 import io.github.cdimascio.dotenv.Dotenv;
 import org.example.page.*;
 import org.example.page.diagnose.DiagnosePatientPage;
 import org.example.page.patient.PatientDetailPage;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.testng.Assert;
+import org.testng.annotations.*;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.edge.EdgeDriver;
 
-public class PatientTest {
-    WebDriver driver;
-    DashboardPage dashboardPage;
-    LoginPage loginPage;
-    QueuePage queuePage;
-    PatientPage patientPage;
-    InpatientPage inpatientPage;
+import java.lang.reflect.Method;
+
+public class PatientTest extends BaseTest {
+    private DashboardPage dashboardPage;
+    private LoginPage loginPage;
+    private QueuePage queuePage;
+    private PatientPage patientPage;
+    private InpatientPage inpatientPage;
     Dotenv dotenv = Dotenv.load();
 
-    @BeforeEach
-    void setUp() {
-        driver = new EdgeDriver();
+    @BeforeMethod
+    public void setUp(Method method) {
+        test = extent.createTest(method.getName());
+
+        driver = setupDriver();
         driver.manage().window().maximize();
         driver.get(dotenv.get("SIMKLINIK_URL"));
 
@@ -33,20 +34,12 @@ public class PatientTest {
         inpatientPage = new InpatientPage(driver);
     }
 
-    @AfterEach
-    void tearDown() {
-        if (driver != null) {
-            driver.quit();
-        }
-    }
-
     void login(String role){
-        if (role=="super"){
+        if (role.equals("super")) {
             loginPage.fillEmail("super@super.com");
             loginPage.fillPassword("super");
             loginPage.submitLogin();
-        }
-        if (role=="doctor"){
+        } else if (role.equals("doctor")) {
             loginPage.fillEmail("doctor@doctor.com");
             loginPage.fillPassword("doctor");
             loginPage.submitLogin();
@@ -54,20 +47,21 @@ public class PatientTest {
     }
 
     @Test
-    void firstPatientVerification(){
+    public void firstPatientVerification(){
         login("doctor");
         dashboardPage.goToPatient();
         String code = patientPage.getFirstPatientRecordCode();
         patientPage.goToFirstPatient();
         String record = patientPage.getPatientRecord();
-        Assertions.assertTrue(record.contains(code));
+        Assert.assertTrue(record.contains(code));
+        test.log(Status.PASS, "Kode pasien sesuai pada halaman detail");
     }
 
     @Test
-    void firstPatientDiagnoseToEnd(){
+    public void firstPatientDiagnoseToEnd(){
         login("doctor");
         dashboardPage.goToQueue();
-        Assertions.assertTrue(queuePage.isDisplayed());
+        Assert.assertTrue(queuePage.isDisplayed());
         int queAmount = queuePage.getQueAmount();
         queuePage.goToFirstQueue();
         DiagnosePatientPage diagnosePatientPage = patientPage.getDiagnosePage();
@@ -78,17 +72,19 @@ public class PatientTest {
         diagnosePatientPage.fillService(1);
         diagnosePatientPage.fillDrug(2);
         diagnosePatientPage.submitToEnd();
-        Assertions.assertTrue(queuePage.isDisplayed());
-        Assertions.assertEquals(queAmount-1,queuePage.getQueAmount());
+
+        Assert.assertTrue(queuePage.isDisplayed());
+        Assert.assertEquals(queAmount - 1, queuePage.getQueAmount());
+        test.log(Status.PASS, "Pasien berhasil didiagnosa dan keluar dari antrian");
     }
 
     @Test
-    void firstPatientDiagnoseToInpatient(){
+    public void firstPatientDiagnoseToInpatient(){
         login("doctor");
         dashboardPage.goToInpatient();
         int inpatientAmount = inpatientPage.getInpatientAmount();
         dashboardPage.goToQueue();
-        Assertions.assertTrue(queuePage.isDisplayed());
+        Assert.assertTrue(queuePage.isDisplayed());
         int queAmount = queuePage.getQueAmount();
         queuePage.goToFirstQueue();
         DiagnosePatientPage diagnosePatientPage = patientPage.getDiagnosePage();
@@ -99,14 +95,16 @@ public class PatientTest {
         diagnosePatientPage.fillService(1);
         diagnosePatientPage.fillDrug(2);
         diagnosePatientPage.submitToInpatient();
-        Assertions.assertTrue(queuePage.isDisplayed());
-        Assertions.assertEquals(queAmount-1,queuePage.getQueAmount());
+
+        Assert.assertTrue(queuePage.isDisplayed());
+        Assert.assertEquals(queAmount - 1, queuePage.getQueAmount());
         dashboardPage.goToInpatient();
-        Assertions.assertEquals(inpatientAmount+1,inpatientPage.getInpatientAmount());
+        Assert.assertEquals(inpatientAmount + 1, inpatientPage.getInpatientAmount());
+        test.log(Status.PASS, "Pasien berhasil masuk ke rawat inap");
     }
 
     @Test
-    void firstPatientEdit(){
+    public void firstPatientEdit(){
         login("super");
         dashboardPage.goToPatient();
         patientPage.goToFirstPatient();
@@ -115,11 +113,12 @@ public class PatientTest {
         patientDetailPage.goToEditPatient();
         patientDetailPage.setName(newName);
         patientDetailPage.submitEditForm();
-        Assertions.assertEquals(newName,patientDetailPage.getName());
+        Assert.assertEquals(patientDetailPage.getName(), newName);
+        test.log(Status.PASS, "Edit nama pasien berhasil");
     }
 
     @Test
-    void firstPatientDetail(){
+    public void firstPatientDetail(){
         login("super");
         dashboardPage.goToPatient();
         patientPage.goToFirstPatient();
@@ -127,6 +126,7 @@ public class PatientTest {
         DiagnosePatientPage diagnosePatientPage = patientPage.getDiagnosePage();
         String anamnesa = patientDetailPage.getFirstAnamnesa();
         patientDetailPage.goToDiagnoseHistory();
-        Assertions.assertEquals(anamnesa,diagnosePatientPage.getAnamnesa());
+        Assert.assertEquals(diagnosePatientPage.getAnamnesa(), anamnesa);
+        test.log(Status.PASS, "Detail riwayat anamnesa sesuai");
     }
 }

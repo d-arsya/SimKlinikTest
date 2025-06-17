@@ -2,6 +2,7 @@ package org.example.page.patient;
 
 import io.github.cdimascio.dotenv.Dotenv;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 
 public class PatientDetailPage {
@@ -36,5 +37,4 @@ public class PatientDetailPage {
     public String getFirstAnamnesa(){
         return driver.findElement(By.xpath("/html/body/div/div[2]/main/div[3]/table/tbody/tr[1]/td[3]")).getText();
     }
-
 }
