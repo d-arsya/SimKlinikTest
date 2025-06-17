@@ -18,7 +18,7 @@ public class NewPatientOldOwner {
     }
 
     public void submitOwner(){
-        wait.until(ExpectedConditions.visibilityOf(driver.findElement(By.xpath("//*[@id=\"table-old-owner-new-patient\"]/tbody/tr[1]/td[5]/button"))));
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"table-old-owner-new-patient\"]/tbody/tr[1]/td[5]/button")));
         driver.findElement(By.xpath("//*[@id=\"table-old-owner-new-patient\"]/tbody/tr[1]/td[5]/button")).click();
         wait.until(ExpectedConditions.visibilityOf(driver.findElement(By.id("patientForm"))));
     }
